@@ -1,0 +1,11 @@
+# Network Configuration
+
+topology: [Mesh1D, L2Switch, L1Switch]
+
+npus_count: [ 2, 8, 48]
+
+# Bandwidth per layer link
+bandwidth: [ 270, 196, 196 ]  # GB/s
+
+# Latency per layer link
+latency: [ 5.0, 400.0, 600.0 ]  # ns

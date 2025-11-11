@@ -1,0 +1,12 @@
+# Network Configuration
+# Hierarchical topology: 4x8 2D Mesh at base layer + 3 layers of switches
+
+# 4-layer topology: Mesh2D at bottom, then 3 layers of switches
+#topology: [ Mesh2D, Switch, Switch, Switch ]
+topology: [ Mesh1D, VirtualSwitch, SpinalSwitch]
+
+npus_count: [ 2, 24, 16]
+
+bandwidth: [ 2400, 1100, 196 ]  # GB/s
+
+latency: [ 5.0, 50.0, 600.0 ]  # ns
