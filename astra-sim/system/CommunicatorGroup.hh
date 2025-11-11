@@ -24,7 +24,7 @@ class CommunicatorGroup {
     ~CommunicatorGroup();
 
     std::vector<int> involved_NPUs;
-    int num_streams;
+    long long int num_streams;
 
   private:
     int id;

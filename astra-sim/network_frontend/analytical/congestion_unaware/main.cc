@@ -59,6 +59,9 @@ int main(int argc, char* argv[]) {
     const auto npus_count_per_dim = topology->get_npus_count_per_dim();
     const auto dims_count = topology->get_dims_count();
 
+    LoggerFactory::get_logger("system::main")->info("custom multi-dim topology, npus_count: {}, dims_count: {}",
+        npus_count, dims_count);
+
     // Set up Network API
     CongestionUnawareNetworkApi::set_event_queue(event_queue);
     CongestionUnawareNetworkApi::set_topology(topology);
@@ -75,8 +78,10 @@ int main(int argc, char* argv[]) {
         queues_per_dim.push_back(num_queues_per_dim);
     }
 
+    LoggerFactory::get_logger("system::main")->info("Creating systems");
     for (int i = 0; i < npus_count; i++) {
         // create network and system
+        // LoggerFactory::get_logger("system::main")->info("Creating system: {}", i);
         auto network_api = std::make_unique<CongestionUnawareNetworkApi>(i);
         auto* const system =
             new Sys(i, workload_configuration, comm_group_configuration,
@@ -94,6 +99,7 @@ int main(int argc, char* argv[]) {
         systems[i]->workload->fire();
     }
 
+    LoggerFactory::get_logger("system::main")->info("Running simulation");
     // run simulation
     while (!event_queue->finished()) {
         event_queue->proceed();
