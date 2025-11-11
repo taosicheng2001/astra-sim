@@ -1,0 +1,31 @@
+{
+    "scheduling-policy": "LIFO",
+    "endpoint-delay": 10,
+    "active-chunks-per-dimension": 2,
+    "preferred-dataset-splits": 4,
+    "all-reduce-implementation": [
+        "ring",
+        "doubleBinaryTree",
+        "halvingDoubling"
+    ],
+    "all-gather-implementation": [
+        "ring",
+        "doubleBinaryTree",
+        "halvingDoubling"
+    ],
+    "reduce-scatter-implementation": [
+        "ring",
+        "doubleBinaryTree",
+        "halvingDoubling"
+    ],
+    "all-to-all-implementation": [
+        "ring",
+        "doubleBinaryTree",
+        "halvingDoubling"
+    ],
+    "collective-optimization": "localBWAware",
+    "local-mem-bw": 1600,
+    "peak-perf": 400,
+    "roofline-enabled": 1,
+    "boost-mode": 0
+}
