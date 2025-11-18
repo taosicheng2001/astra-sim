@@ -44,7 +44,8 @@ int main(int argc, char* argv[]) {
     const auto injection_scale = cmd_line_parser.get<double>("injection-scale");
     const auto rendezvous_protocol =
         cmd_line_parser.get<bool>("rendezvous-protocol");
-
+    const auto eventTrackerFilePath =
+        cmd_line_parser.get<std::string>("event-tracker-file-path");
     AstraSim::LoggerFactory::init(logging_configuration, logging_folder);
 
     // Instantiate event queue
@@ -79,10 +80,14 @@ int main(int argc, char* argv[]) {
     }
 
     LoggerFactory::get_logger("system::main")->info("Creating systems");
+    std::ofstream eventTrackerFile(eventTrackerFilePath);
+    std::ofstream& eventTrackerFileStream = eventTrackerFile;
+    LoggerFactory::get_logger("system::main")->info("Event tracker file opened: {}", eventTrackerFilePath);
+
     for (int i = 0; i < npus_count; i++) {
         // create network and system
         // LoggerFactory::get_logger("system::main")->info("Creating system: {}", i);
-        auto network_api = std::make_unique<CongestionUnawareNetworkApi>(i);
+        auto network_api = std::make_unique<CongestionUnawareNetworkApi>(i, eventTrackerFileStream);
         auto* const system =
             new Sys(i, workload_configuration, comm_group_configuration,
                     system_configuration, memory_api.get(), network_api.get(),
@@ -105,6 +110,7 @@ int main(int argc, char* argv[]) {
         event_queue->proceed();
     }
 
+    eventTrackerFile.close();
     for (auto it : systems) {
         delete it;
     }
