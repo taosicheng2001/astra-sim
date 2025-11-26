@@ -10,6 +10,7 @@ LICENSE file in the root directory of this source tree.
 #include <astra-network-analytical/common/NetworkParser.h>
 #include <astra-network-analytical/congestion_aware/Helper.h>
 #include <remote_memory_backend/analytical/AnalyticalRemoteMemory.hh>
+#include <astra-network-analytical/congestion_aware/Chunk.h> 
 
 using namespace AstraSim;
 using namespace Analytical;
@@ -17,6 +18,9 @@ using namespace AstraSimAnalytical;
 using namespace AstraSimAnalyticalCongestionAware;
 using namespace NetworkAnalytical;
 using namespace NetworkAnalyticalCongestionAware;
+
+static std::ofstream eventTrackerFile;
+std::ofstream& eventTrackerFileStream = eventTrackerFile;
 
 int main(int argc, char* argv[]) {
     // Parse command line arguments
@@ -44,7 +48,8 @@ int main(int argc, char* argv[]) {
     const auto injection_scale = cmd_line_parser.get<double>("injection-scale");
     const auto rendezvous_protocol =
         cmd_line_parser.get<bool>("rendezvous-protocol");
-
+    const auto eventTrackerFilePath =
+        cmd_line_parser.get<std::string>("event-tracker-file-path");
     AstraSim::LoggerFactory::init(logging_configuration, logging_folder);
 
     // Instantiate event queue
@@ -63,6 +68,11 @@ int main(int argc, char* argv[]) {
     // Set up Network API
     CongestionAwareNetworkApi::set_event_queue(event_queue);
     CongestionAwareNetworkApi::set_topology(topology);
+
+    if (!eventTrackerFilePath.empty()) {
+        eventTrackerFile.open(eventTrackerFilePath);
+    }
+    LoggerFactory::get_logger("system::main")->info("Event tracker file opened: {}", eventTrackerFilePath);
 
     // Create ASTRA-sim related resources
     auto network_apis =

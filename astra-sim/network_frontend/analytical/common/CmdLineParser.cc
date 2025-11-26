@@ -41,6 +41,8 @@ void CmdLineParser::define_options() noexcept {
         cxxopts::value<double>()->default_value("1"))(
         "rendezvous-protocol", "Whether to enable rendezvous protocol",
         cxxopts::value<bool>()->default_value("false"));
+        options.add_options()("event-tracker-file-path", "Event tracker output file path",
+        cxxopts::value<std::string>()->default_value(""));
 }
 
 void CmdLineParser::parse(int argc, char* argv[]) noexcept {
